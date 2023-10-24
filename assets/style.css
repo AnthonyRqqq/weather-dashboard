@@ -9,3 +9,19 @@ header {
 main {
     display: flex;
 }
+
+#sidebar * {
+    width: 100%;
+}
+
+button {
+    background-color: rgb(131, 166, 241);
+    color: white;
+    border: solid rgb(131, 166, 241);
+    border-radius: 5px;
+    margin-top: 10px
+}
+
+#current-day {
+    border: solid black 1px;
+}
