@@ -1,4 +1,5 @@
 var fiveDayForecast = document.querySelector("#five-day-forecast");
+var currentDay = document.querySelector("#current-day");
 
 
 // URL for retrieving weather data of cities based on latitude and longitude
@@ -22,13 +23,14 @@ function searchCity() {
             return response.json();
         })
         .then(function (data) {
-            displayCurrentWeather(date);
+            displayCurrentWeather(data);
             displayForecast(data);
         })
 
 
 }
 
+// For displaying five-day forecast
 function displayForecast(data) {
     // Pulls latitude and longitude from fetch request on line 18
     var latitude = data[0].lat;
@@ -47,7 +49,7 @@ function displayForecast(data) {
 
             // Formats the recieved data to only have one weather result per day for 5 days
             for (var i = 3; i < data.list.length; i += 8) {
-                console.log(data.list[i])
+                // console.log(data.list[i])
 
                 // Creates container for each day
                 forecast = document.createElement("section");
@@ -56,7 +58,7 @@ function displayForecast(data) {
 
                 // Pulls data for each day
                 date = data.list[i].dt_txt
-                console.log(date)
+                // console.log(date)
                 temperature = data.list[i].main.temp;
                 wind = data.list[i].wind.speed;
                 humidity = data.list[i].main.humidity;
@@ -67,7 +69,18 @@ function displayForecast(data) {
                 forecastWind = document.createElement("p");
                 forecastHumidity = document.createElement("p");
 
-                forecastDate.textContent = date
+                var currentDate = new Date();
+
+                for (var j = 1; j <= 4; j++) {
+
+                var day = currentDate.getDate()
+                var month = currentDate.getMonth()
+                var year = currentDate.getFullYear();
+                var formattedDate = (day+j) + "/" + (month+j) + "/" + year;
+                forecastDate.textContent = formattedDate;
+                }
+                console.log(forecastDate)
+
                 forecastTemp.textContent = "Temp: " + temperature + " \u00B0F";
                 forecastWind.textContent = "Wind: " + wind + " MPH";
                 forecastHumidity.textContent = "Humidity: " + humidity + "%"
@@ -78,7 +91,7 @@ function displayForecast(data) {
                 forecastHumidity.setAttribute("class", "forecast-stat");
 
                 // Adds p elements into their specific day containers
-                forecast.appendChild(forecastDate)
+                forecast.appendChild(forecastDate);
                 forecast.appendChild(forecastTemp);
                 forecast.appendChild(forecastWind);
                 forecast.appendChild(forecastHumidity);
@@ -87,3 +100,42 @@ function displayForecast(data) {
         })
 }
 
+// For displaying current forecast
+function displayCurrentWeather(data) {
+    // Pulls latitude and longitude from fetch request on line 18
+    var latitude = data[0].lat;
+    var longitude = data[0].lon;
+    
+    requestCurrentWeatherUrl = "https://api.openweathermap.org/data/2.5/weather/?lat=" + latitude + "&lon=" + longitude + "&units=imperial&appid=91e1ab2853251b69b38a1c4b07c71d3c";
+    fetch(requestCurrentWeatherUrl)
+        .then(function (response) {
+            return response.json();
+        })
+
+        .then(function(data) {
+            console.log(data);
+            currentDay.innerHTML = "";
+
+            // Creates element, applies text content based on above data, puts all elements of the current day into a class
+            cityName = document.createElement("h3");
+            currentTemp = document.createElement("p");
+            currentWind = document.createElement("p");
+            currentHumidity = document.createElement("p");
+
+            cityName.textContent = data.name + " (" + new Date().getDate() + "/" + new Date().getMonth() + "/" + new Date().getFullYear() + ")"
+            currentTemp.textContent = "Temp: " + data.main.temp + " \u00B0F";
+            currentWind.textContent = "Wind: " + data.wind.speed + " MPH";
+            currentHumidity.textContent = "Humidity: " +data.main.humidity + "%";
+
+            cityName.setAttribute("class", "current-weather");
+            currentTemp.setAttribute("class", "current-weather");
+            currentWind.setAttribute("class", "current-weather");
+            currentHumidity.setAttribute("class", "current-weather");
+
+            // Adds child elements into current day container
+            currentDay.appendChild(cityName);
+            currentDay.appendChild(currentTemp);
+            currentDay.appendChild(currentWind);
+            currentDay.appendChild(currentHumidity);
+        })
+}

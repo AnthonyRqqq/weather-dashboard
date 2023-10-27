@@ -26,6 +26,10 @@ button {
     border: solid black 1px;
 }
 
+#current-day h3 {
+    font-size: 38px;
+}
+
 /* Sets color for forecasted days to be created */
 .forecasted-days {
     border: solid black 1px;
