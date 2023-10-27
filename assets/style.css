@@ -25,3 +25,23 @@ button {
 #current-day {
     border: solid black 1px;
 }
+
+/* Sets color for forecasted days to be created */
+.forecasted-days {
+    border: solid black 1px;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin: 10px;
+    min-width: 18%;
+    color: white;
+    background-color: rgb(9, 9, 58);
+}
+
+.forecast-stat{
+    display: block;
+}
+
+h3 {
+    font-size: 18px;
+}
