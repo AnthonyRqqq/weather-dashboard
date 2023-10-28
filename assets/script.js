@@ -1,6 +1,9 @@
 var fiveDayForecast = document.querySelector("#five-day-forecast");
 var currentDay = document.querySelector("#current-day");
 
+// Creates empty array to hold previously searched items
+var previousSearches = []
+
 
 // URL for retrieving weather data of cities based on latitude and longitude
 var requestWeatherForecastUrl = "https://api.openweathermap.org/data/2.5/forecast/?lat={lat}&lon={lon}&units=imperial&appid=91e1ab2853251b69b38a1c4b07c71d3c";
@@ -11,6 +14,7 @@ var requestCurrentWeatherUrl = "https://api.openweathermap.org/data/2.5/weather?
 
 var searchButton = document.querySelector("#search-button");
 searchButton.addEventListener("click", searchCity);
+searchButton.addEventListener("click", saveSearch);
 
 function searchCity() {
     // Selects entered text in search bar
@@ -138,4 +142,11 @@ function displayCurrentWeather(data) {
             currentDay.appendChild(currentWind);
             currentDay.appendChild(currentHumidity);
         })
+}
+
+function saveSearch() {
+    inputEl = document.querySelector("#city-search").value;
+    inputEl.textContent = inputEl.toUpperCase();
+    previousSearches.unshift(inputEl);
+    localStorage.setItem("previous-searches", JSON.stringify(previousSearches));
 }
