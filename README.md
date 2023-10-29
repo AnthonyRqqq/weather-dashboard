@@ -9,5 +9,7 @@ This website provides a means of searching the current weather of a city as well
 <br>Up to five previously searched cities will be saved in localStorage.
 <br>The buttons representing previously searched cities can be clicked to once again retrieve their data.
 
+[A link to the website can be found here.](https://anthonyrqqq.github.io/weather-dashboard)
+
 ### Sources
 - Lines 237-240 constructed with assistance from Xpert Learning Assistant

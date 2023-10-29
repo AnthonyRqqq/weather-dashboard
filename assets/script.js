@@ -1,22 +1,3 @@
-var fiveDayForecast = document.querySelector("#five-day-forecast");
-var currentDay = document.querySelector("#current-day");
-var sidebar = document.querySelector("#sidebar");
-
-// Creates empty array to hold previously searched items
-var previousSearches = [];
-previousSearches = previousSearches.concat(JSON.parse(localStorage.getItem("previous-searches")));
-// // Keeps the previous searches limited to 5
-if (previousSearches.length > 5) {
-    previousSearches.pop();
-    localStorage.setItem("previous-searches", JSON.stringify(previousSearches));
-}
-// Ensures blank button won't be created with empty array when no cities have been searched yet
-if (previousSearches[0] !== null) {
-renderPreviousSearches();
-}
-
-
-
 // URL for retrieving weather forecast data of cities based on latitude and longitude using farenheight
 var requestWeatherForecastUrl = "https://api.openweathermap.org/data/2.5/forecast/?lat={lat}&lon={lon}&units=imperial&appid=91e1ab2853251b69b38a1c4b07c71d3c";
 
@@ -25,6 +6,25 @@ var requestLocationUrl = "http://api.openweathermap.org/geo/1.0/direct?q={city n
 
 // URL for retrieving current weather data of cities based on latitude and longitude using farenheight
 var requestCurrentWeatherUrl = "https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid=91e1ab2853251b69b38a1c4b07c71d3c"
+
+var sidebar = document.querySelector("#sidebar");
+var currentDay = document.querySelector("#current-day");
+var fiveDayForecast = document.querySelector("#five-day-forecast");
+
+// Creates empty array to hold previously searched items
+var previousSearches = [];
+previousSearches = previousSearches.concat(JSON.parse(localStorage.getItem("previous-searches")));
+
+// Keeps the previous searches limited to 5
+if (previousSearches.length > 5) {
+    previousSearches.pop();
+    localStorage.setItem("previous-searches", JSON.stringify(previousSearches));
+}
+
+// Ensures blank button won't be created with empty array when no cities have been searched yet
+if (previousSearches[0] !== null) {
+renderPreviousSearches();
+}
 
 var searchButton = document.querySelector("#search-button");
 // Searches city and displays current as well as five-day forecast
@@ -39,6 +39,7 @@ sidebar.addEventListener("click", function(event) {
     }
   });
 
+// For use in searching cities using the input form
 function searchCity() {
     // Selects entered text in search bar
     inputEl = document.querySelector("#city-search").value;
@@ -77,6 +78,55 @@ function searchCityAgain(event) {
         })
 
 
+}
+
+// For displaying current forecast
+function displayCurrentWeather(data) {
+    // Pulls latitude and longitude from fetch request on line 18
+    var latitude = data[0].lat;
+    var longitude = data[0].lon;
+    
+    requestCurrentWeatherUrl = "https://api.openweathermap.org/data/2.5/weather/?lat=" + latitude + "&lon=" + longitude + "&units=imperial&appid=91e1ab2853251b69b38a1c4b07c71d3c";
+    fetch(requestCurrentWeatherUrl)
+        .then(function (response) {
+            return response.json();
+        })
+
+        .then(function(data) {
+            console.log(data);
+            currentDay.innerHTML = "";
+
+            // Creates element, applies text content based on above data, puts all elements of the current day into a class
+            cityName = document.createElement("h3");
+            currentTemp = document.createElement("p");
+            currentWind = document.createElement("p");
+            currentHumidity = document.createElement("p");
+
+            weather = data.weather[0].main;
+                if (weather === "Clouds") {
+                    weather = "\u2601";
+                } else if (weather === "Rain") {
+                    weather = "\u2614";
+                } else {
+                    weather = "\u2600";
+                }
+
+            cityName.textContent = data.name + " (" + new Date().getDate() + "/" + new Date().getMonth() + "/" + new Date().getFullYear() + ") " + weather;
+            currentTemp.textContent = "Temp: " + data.main.temp + " \u00B0F";
+            currentWind.textContent = "Wind: " + data.wind.speed + " MPH";
+            currentHumidity.textContent = "Humidity: " +data.main.humidity + "%";
+
+            cityName.setAttribute("class", "current-weather");
+            currentTemp.setAttribute("class", "current-weather");
+            currentWind.setAttribute("class", "current-weather");
+            currentHumidity.setAttribute("class", "current-weather");
+
+            // Adds child elements into current day container
+            currentDay.appendChild(cityName);
+            currentDay.appendChild(currentTemp);
+            currentDay.appendChild(currentWind);
+            currentDay.appendChild(currentHumidity);
+        })
 }
 
 // For displaying five-day forecast
@@ -150,57 +200,7 @@ function displayForecast(data) {
 
             }
             }
-        )}
-
-
-// For displaying current forecast
-function displayCurrentWeather(data) {
-    // Pulls latitude and longitude from fetch request on line 18
-    var latitude = data[0].lat;
-    var longitude = data[0].lon;
-    
-    requestCurrentWeatherUrl = "https://api.openweathermap.org/data/2.5/weather/?lat=" + latitude + "&lon=" + longitude + "&units=imperial&appid=91e1ab2853251b69b38a1c4b07c71d3c";
-    fetch(requestCurrentWeatherUrl)
-        .then(function (response) {
-            return response.json();
-        })
-
-        .then(function(data) {
-            console.log(data);
-            currentDay.innerHTML = "";
-
-            // Creates element, applies text content based on above data, puts all elements of the current day into a class
-            cityName = document.createElement("h3");
-            currentTemp = document.createElement("p");
-            currentWind = document.createElement("p");
-            currentHumidity = document.createElement("p");
-
-            weather = data.weather[0].main;
-                if (weather === "Clouds") {
-                    weather = "\u2601";
-                } else if (weather === "Rain") {
-                    weather = "\u2614";
-                } else {
-                    weather = "\u2600";
-                }
-
-            cityName.textContent = data.name + " (" + new Date().getDate() + "/" + new Date().getMonth() + "/" + new Date().getFullYear() + ") " + weather;
-            currentTemp.textContent = "Temp: " + data.main.temp + " \u00B0F";
-            currentWind.textContent = "Wind: " + data.wind.speed + " MPH";
-            currentHumidity.textContent = "Humidity: " +data.main.humidity + "%";
-
-            cityName.setAttribute("class", "current-weather");
-            currentTemp.setAttribute("class", "current-weather");
-            currentWind.setAttribute("class", "current-weather");
-            currentHumidity.setAttribute("class", "current-weather");
-
-            // Adds child elements into current day container
-            currentDay.appendChild(cityName);
-            currentDay.appendChild(currentTemp);
-            currentDay.appendChild(currentWind);
-            currentDay.appendChild(currentHumidity);
-        })
-}
+ )}
 
 // For saving searched cities using JSON
 function saveSearch() {
