@@ -19,8 +19,10 @@ renderPreviousSearches();
 
 // URL for retrieving weather forecast data of cities based on latitude and longitude using farenheight
 var requestWeatherForecastUrl = "https://api.openweathermap.org/data/2.5/forecast/?lat={lat}&lon={lon}&units=imperial&appid=91e1ab2853251b69b38a1c4b07c71d3c";
+
 // URL for retrieving data of cities based on name, formatted to return only one city
 var requestLocationUrl = "http://api.openweathermap.org/geo/1.0/direct?q={city name},{state code},{country code}&limit=1&appid=91e1ab2853251b69b38a1c4b07c71d3c";
+
 // URL for retrieving current weather data of cities based on latitude and longitude using farenheight
 var requestCurrentWeatherUrl = "https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid=91e1ab2853251b69b38a1c4b07c71d3c"
 
@@ -94,7 +96,7 @@ function displayForecast(data) {
             // Clears any preexisting data from previous searches
             fiveDayForecast.innerHTML = "";
 
-            // Formats the recieved data to only have one weather result per day for 5 days
+            // Formats the recieved data to only have one weather result per day for 5 days using noon as the time
             for (var i = 3; i < data.list.length; i += 8) {
                 // console.log(data.list[i])
 
@@ -105,7 +107,7 @@ function displayForecast(data) {
 
                 // Pulls data for each day
                 date = data.list[i].dt_txt
-                // console.log(date)
+                console.log(date)
                 temperature = data.list[i].main.temp;
                 wind = data.list[i].wind.speed;
                 humidity = data.list[i].main.humidity;
@@ -116,18 +118,8 @@ function displayForecast(data) {
                 forecastWind = document.createElement("p");
                 forecastHumidity = document.createElement("p");
 
-                var currentDate = new Date();
-
-                for (var j = 1; j <= 4; j++) {
-
-                var day = currentDate.getDate()
-                var month = currentDate.getMonth()
-                var year = currentDate.getFullYear();
-                var formattedDate = (day+j) + "/" + (month+j) + "/" + year;
-                forecastDate.textContent = formattedDate;
-                }
-                console.log(forecastDate)
-
+                // Formats the date into something more visually appealing
+                forecastDate.textContent = date.slice(8,10) + "/" + date.slice(5,7) + "/" + date.slice(0,4);
                 forecastTemp.textContent = "Temp: " + temperature + " \u00B0F";
                 forecastWind.textContent = "Wind: " + wind + " MPH";
                 forecastHumidity.textContent = "Humidity: " + humidity + "%"
@@ -144,8 +136,9 @@ function displayForecast(data) {
                 forecast.appendChild(forecastHumidity);
 
             }
-        })
-}
+            }
+        )}
+
 
 // For displaying current forecast
 function displayCurrentWeather(data) {
@@ -194,14 +187,22 @@ function saveSearch() {
     if (inputEl === "") {
         return;
     }
+
     // Capitalizes first letter of city name for more visually pleasing buttons created during the renderPreviousSearches function
     inputEl = inputEl.charAt(0).toUpperCase() + inputEl.slice(1);
+
     // Removes the null element from an empty array when first city is searched and saved
     if (previousSearches[0] === null) {
         previousSearches.pop();
     }
+
     // Adds newly searched city to front of array
     previousSearches.unshift(inputEl);
+
+    //Limits array length to 5
+    if (previousSearches.length > 5) {
+        previousSearches.pop();
+    }
     localStorage.setItem("previous-searches", JSON.stringify(previousSearches));
 
     renderPreviousSearches();
