@@ -1,27 +1,70 @@
 var fiveDayForecast = document.querySelector("#five-day-forecast");
 var currentDay = document.querySelector("#current-day");
+var sidebar = document.querySelector("#sidebar");
 
 // Creates empty array to hold previously searched items
-var previousSearches = []
+var previousSearches = [];
+previousSearches = previousSearches.concat(JSON.parse(localStorage.getItem("previous-searches")));
+// // Keeps the previous searches limited to 5
+if (previousSearches.length > 5) {
+    previousSearches.pop();
+    localStorage.setItem("previous-searches", JSON.stringify(previousSearches));
+}
+// Ensures blank button won't be created with empty array when no cities have been searched yet
+if (previousSearches[0] !== null) {
+renderPreviousSearches();
+}
 
 
-// URL for retrieving weather data of cities based on latitude and longitude
+
+// URL for retrieving weather forecast data of cities based on latitude and longitude using farenheight
 var requestWeatherForecastUrl = "https://api.openweathermap.org/data/2.5/forecast/?lat={lat}&lon={lon}&units=imperial&appid=91e1ab2853251b69b38a1c4b07c71d3c";
 // URL for retrieving data of cities based on name, formatted to return only one city
 var requestLocationUrl = "http://api.openweathermap.org/geo/1.0/direct?q={city name},{state code},{country code}&limit=1&appid=91e1ab2853251b69b38a1c4b07c71d3c";
-
+// URL for retrieving current weather data of cities based on latitude and longitude using farenheight
 var requestCurrentWeatherUrl = "https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid=91e1ab2853251b69b38a1c4b07c71d3c"
 
 var searchButton = document.querySelector("#search-button");
+// Searches city and displays current as well as five-day forecast
 searchButton.addEventListener("click", searchCity);
+// Saves the searched city using JSON
 searchButton.addEventListener("click", saveSearch);
+
+// Allows user to click previously searched and saved cities and receive data
+sidebar.addEventListener("click", function(event) {
+    if (event.target.classList.contains("previous-search-button")) {
+      searchCityAgain(event);
+    }
+  });
 
 function searchCity() {
     // Selects entered text in search bar
     inputEl = document.querySelector("#city-search").value;
+    // Ensures data is present within the text field to be searched
+    if (inputEl === "") {
+        return;
+    }
 
     // Creates new string and fetches coordinates using the text in search bar
     requestLocationUrl = "http://api.openweathermap.org/geo/1.0/direct?q=" + inputEl + "&limit=1&appid=91e1ab2853251b69b38a1c4b07c71d3c";
+    fetch(requestLocationUrl)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            displayCurrentWeather(data);
+            displayForecast(data);
+        })
+
+
+}
+
+// For use in searching cities via buttons elements for previously searched cities
+function searchCityAgain(event) {
+    var searchAgainName = event.target.textContent;
+
+    // Creates new string and fetches coordinates using the text in search bar
+    requestLocationUrl = "http://api.openweathermap.org/geo/1.0/direct?q=" + searchAgainName + "&limit=1&appid=91e1ab2853251b69b38a1c4b07c71d3c";
     fetch(requestLocationUrl)
         .then(function (response) {
             return response.json();
@@ -144,9 +187,40 @@ function displayCurrentWeather(data) {
         })
 }
 
+// For saving searched cities using JSON
 function saveSearch() {
     inputEl = document.querySelector("#city-search").value;
-    inputEl.textContent = inputEl.toUpperCase();
+        // Ensures data is present within the text field to be searched
+    if (inputEl === "") {
+        return;
+    }
+    // Capitalizes first letter of city name for more visually pleasing buttons created during the renderPreviousSearches function
+    inputEl = inputEl.charAt(0).toUpperCase() + inputEl.slice(1);
+    // Removes the null element from an empty array when first city is searched and saved
+    if (previousSearches[0] === null) {
+        previousSearches.pop();
+    }
+    // Adds newly searched city to front of array
     previousSearches.unshift(inputEl);
     localStorage.setItem("previous-searches", JSON.stringify(previousSearches));
+
+    renderPreviousSearches();
+}
+
+// For rendering previously searched cities
+function renderPreviousSearches() {
+    // Checks for previously created buttons and removes before creating and appending new button list
+    // Code created with assistance from Xpert Learning Assistant
+    var btnsCheck = document.querySelectorAll(".previous-search-button")
+    btnsCheck.forEach(function(btn) {
+        btn.remove();
+      });
+
+    // Creates a button element for each previously searched city up to 5 and appends it to sidebar
+    for (var i = 0; i < previousSearches.length; i++) {
+    previousSearchBtn = document.createElement("button");
+    previousSearchBtn.setAttribute("class", "previous-search-button");
+    previousSearchBtn.textContent = previousSearches[i];
+    sidebar.appendChild(previousSearchBtn);
+    }
 }
