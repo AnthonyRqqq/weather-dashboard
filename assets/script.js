@@ -2,7 +2,7 @@
 var requestWeatherForecastUrl = "https://api.openweathermap.org/data/2.5/forecast/?lat={lat}&lon={lon}&units=imperial&appid=91e1ab2853251b69b38a1c4b07c71d3c";
 
 // URL for retrieving data of cities based on name, formatted to return only one city
-var requestLocationUrl = "http://api.openweathermap.org/geo/1.0/direct?q={city name},{state code},{country code}&limit=1&appid=91e1ab2853251b69b38a1c4b07c71d3c";
+var requestLocationUrl = "https://api.openweathermap.org/geo/1.0/direct?q={city name},{state code},{country code}&limit=1&appid=91e1ab2853251b69b38a1c4b07c71d3c";
 
 // URL for retrieving current weather data of cities based on latitude and longitude using farenheight
 var requestCurrentWeatherUrl = "https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid=91e1ab2853251b69b38a1c4b07c71d3c"
