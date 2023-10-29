@@ -128,7 +128,7 @@ function displayForecast(data) {
                 forecastWind = document.createElement("p");
                 forecastHumidity = document.createElement("p");
 
-                // Formats the date into something more visually appealing and adds an icon based on weather
+                // Formats the date into something more visually appealing
                 forecastDate.textContent = date.slice(8,10) + "/" + date.slice(5,7) + "/" + date.slice(0,4);
                 forecastWeather.textContent = weather;
                 forecastTemp.textContent = "Temp: " + temperature + " \u00B0F";
