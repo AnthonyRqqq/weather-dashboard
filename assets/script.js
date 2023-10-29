@@ -98,7 +98,7 @@ function displayForecast(data) {
 
             // Formats the recieved data to only have one weather result per day for 5 days using noon as the time
             for (var i = 3; i < data.list.length; i += 8) {
-                // console.log(data.list[i])
+                console.log(data.list[i])
 
                 // Creates container for each day
                 forecast = document.createElement("section");

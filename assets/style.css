@@ -22,8 +22,16 @@ button {
     margin-top: 10px
 }
 
+#search-button {
+    margin-bottom: 10%
+}
+
 #current-day {
     border: solid black 1px;
+}
+
+.current-weather {
+    padding-left: 1%;
 }
 
 #current-day h3 {
@@ -42,7 +50,7 @@ button {
     background-color: rgb(9, 9, 58);
 }
 
-.forecast-stat{
+.forecast-stat {
     display: block;
 }
 
