@@ -49,7 +49,7 @@ function searchCity() {
     }
 
     // Creates new string and fetches coordinates using the text in search bar
-    requestLocationUrl = "http://api.openweathermap.org/geo/1.0/direct?q=" + inputEl + "&limit=1&appid=91e1ab2853251b69b38a1c4b07c71d3c";
+    requestLocationUrl = "https://api.openweathermap.org/geo/1.0/direct?q=" + inputEl + "&limit=1&appid=91e1ab2853251b69b38a1c4b07c71d3c";
     fetch(requestLocationUrl)
         .then(function (response) {
             return response.json();
@@ -67,7 +67,7 @@ function searchCityAgain(event) {
     var searchAgainName = event.target.textContent;
 
     // Creates new string and fetches coordinates using the text in search bar
-    requestLocationUrl = "http://api.openweathermap.org/geo/1.0/direct?q=" + searchAgainName + "&limit=1&appid=91e1ab2853251b69b38a1c4b07c71d3c";
+    requestLocationUrl = "https://api.openweathermap.org/geo/1.0/direct?q=" + searchAgainName + "&limit=1&appid=91e1ab2853251b69b38a1c4b07c71d3c";
     fetch(requestLocationUrl)
         .then(function (response) {
             return response.json();
