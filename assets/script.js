@@ -106,31 +106,44 @@ function displayForecast(data) {
                 fiveDayForecast.appendChild(forecast)
 
                 // Pulls data for each day
-                date = data.list[i].dt_txt
-                console.log(date)
+                // Determines weather and adds appropriate icon
+                weather = data.list[i].weather[0].main;
+                if (weather === "Clouds") {
+                    weather = "\u2601";
+                } else if (weather === "Rain") {
+                    weather = "\u2614";
+                } else {
+                    weather = "\u2600";
+                }
+
+                date = data.list[i].dt_txt;
                 temperature = data.list[i].main.temp;
                 wind = data.list[i].wind.speed;
                 humidity = data.list[i].main.humidity;
 
                 // Creates element, applies text content based on above data, puts all p elements of the forecast into a class
                 forecastDate = document.createElement("h3");
+                forecastWeather = document.createElement("p");
                 forecastTemp = document.createElement("P");
                 forecastWind = document.createElement("p");
                 forecastHumidity = document.createElement("p");
 
-                // Formats the date into something more visually appealing
+                // Formats the date into something more visually appealing and adds an icon based on weather
                 forecastDate.textContent = date.slice(8,10) + "/" + date.slice(5,7) + "/" + date.slice(0,4);
+                forecastWeather.textContent = weather;
                 forecastTemp.textContent = "Temp: " + temperature + " \u00B0F";
                 forecastWind.textContent = "Wind: " + wind + " MPH";
-                forecastHumidity.textContent = "Humidity: " + humidity + "%"
+                forecastHumidity.textContent = "Humidity: " + humidity + "%";
 
                 forecastDate.setAttribute("class", "forecast-stat");
+                forecastWeather.setAttribute("class", "forecast-stat");
                 forecastTemp.setAttribute("class", "forecast-stat");
                 forecastWind.setAttribute("class", "forecast-stat");
                 forecastHumidity.setAttribute("class", "forecast-stat");
 
                 // Adds p elements into their specific day containers
                 forecast.appendChild(forecastDate);
+                forecast.appendChild(forecastWeather);
                 forecast.appendChild(forecastTemp);
                 forecast.appendChild(forecastWind);
                 forecast.appendChild(forecastHumidity);
@@ -162,7 +175,16 @@ function displayCurrentWeather(data) {
             currentWind = document.createElement("p");
             currentHumidity = document.createElement("p");
 
-            cityName.textContent = data.name + " (" + new Date().getDate() + "/" + new Date().getMonth() + "/" + new Date().getFullYear() + ")"
+            weather = data.weather[0].main;
+                if (weather === "Clouds") {
+                    weather = "\u2601";
+                } else if (weather === "Rain") {
+                    weather = "\u2614";
+                } else {
+                    weather = "\u2600";
+                }
+
+            cityName.textContent = data.name + " (" + new Date().getDate() + "/" + new Date().getMonth() + "/" + new Date().getFullYear() + ") " + weather;
             currentTemp.textContent = "Temp: " + data.main.temp + " \u00B0F";
             currentWind.textContent = "Wind: " + data.wind.speed + " MPH";
             currentHumidity.textContent = "Humidity: " +data.main.humidity + "%";
