@@ -111,7 +111,7 @@ function displayCurrentWeather(data) {
                     weather = "\u2600";
                 }
 
-            cityName.textContent = data.name + " (" + new Date().getDate() + "/" + new Date().getMonth() + "/" + new Date().getFullYear() + ") " + weather;
+            cityName.textContent = data.name + " (" + new Date().getDate() + "/" + (new Date().getMonth() + 1) + "/" + new Date().getFullYear() + ") " + weather;
             currentTemp.textContent = "Temp: " + data.main.temp + " \u00B0F";
             currentWind.textContent = "Wind: " + data.wind.speed + " MPH";
             currentHumidity.textContent = "Humidity: " +data.main.humidity + "%";
